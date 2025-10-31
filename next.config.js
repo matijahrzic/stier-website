@@ -17,10 +17,6 @@ const nextConfig = {
     ],
     unoptimized: false,
   },
-  i18n: {
-    locales: ['hr', 'en'],
-    defaultLocale: 'hr',
-  },
 }
 
 module.exports = nextConfig

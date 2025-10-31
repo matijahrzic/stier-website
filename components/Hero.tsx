@@ -17,6 +17,32 @@ const heroImages = [
 
 export default function Hero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [objectPosition, setObjectPosition] = useState('50% 50%');
+
+  // Adjust object position based on viewport aspect ratio
+  useEffect(() => {
+    const updatePosition = () => {
+      const aspectRatio = window.innerWidth / window.innerHeight;
+
+      if (aspectRatio > 2.5) {
+        // Ultra-wide (21:9 etc.)
+        setObjectPosition('50% 40%');
+      } else if (aspectRatio > 1.6) {
+        // Wide desktop (16:9 and similar) - 1920x1080 = 1.77
+        setObjectPosition('50% 50%');
+      } else if (aspectRatio > 1.2) {
+        // Standard desktop/tablet (16:10, 3:2, 4:3)
+        setObjectPosition('50% 55%');
+      } else {
+        // Mobile/tablet (portrait)
+        setObjectPosition('50% 60%');
+      }
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    return () => window.removeEventListener('resize', updatePosition);
+  }, []);
 
   // Auto-rotate images every 5 seconds
   useEffect(() => {
@@ -33,7 +59,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden" style={{ height: '100vh' }}>
       {/* Background Images with Carousel */}
       <div className="absolute inset-0 z-0">
         {heroImages.map((image, index) => (
@@ -47,7 +73,7 @@ export default function Hero() {
               alt="Davor Ivo Stier"
               className="w-full h-full object-cover"
               style={{
-                objectPosition: 'center top',
+                objectPosition: objectPosition,
                 objectFit: 'cover',
               }}
             />

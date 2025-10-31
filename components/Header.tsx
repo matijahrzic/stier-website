@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { HiMenu, HiX } from 'react-icons/hi';
@@ -8,6 +9,7 @@ import { FaFacebookF, FaInstagram, FaXTwitter, FaLinkedinIn } from 'react-icons/
 import DarkModeToggle from './DarkModeToggle';
 
 export default function Header() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [currentLang, setCurrentLang] = useState('hr');
@@ -37,7 +39,9 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white dark:bg-gray-800 shadow-lg' : 'bg-transparent'
+        isScrolled
+          ? 'bg-white dark:bg-gray-800 shadow-xl border-b-2 border-gray-100 dark:border-gray-700'
+          : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4">
@@ -57,19 +61,38 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-semibold text-base transition-colors ${
-                  isScrolled
-                    ? 'text-gray-800 dark:text-gray-200 hover:text-hdz-blue dark:hover:text-blue-400'
-                    : 'text-white hover:text-white/80 drop-shadow-md'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`font-semibold text-base transition-all relative group ${
+                    isScrolled
+                      ? isActive
+                        ? 'text-hdz-blue dark:text-blue-400'
+                        : 'text-gray-800 dark:text-gray-200 hover:text-hdz-blue dark:hover:text-blue-400'
+                      : isActive
+                      ? 'text-white drop-shadow-lg'
+                      : 'text-white hover:text-white/80 drop-shadow-md'
+                  }`}
+                >
+                  {item.label}
+                  {/* Active indicator - bottom border */}
+                  {isActive && (
+                    <span className={`absolute -bottom-1 left-0 right-0 h-0.5 ${
+                      isScrolled ? 'bg-hdz-blue dark:bg-blue-400' : 'bg-white'
+                    } rounded-full`} />
+                  )}
+                  {/* Hover effect */}
+                  {!isActive && (
+                    <span className={`absolute -bottom-1 left-0 right-0 h-0.5 ${
+                      isScrolled ? 'bg-hdz-blue dark:bg-blue-400' : 'bg-white'
+                    } rounded-full scale-x-0 group-hover:scale-x-100 transition-transform origin-left`} />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right side - Social & Language */}
@@ -160,16 +183,27 @@ export default function Header() {
       >
         <div className="p-6">
           <nav className="flex flex-col space-y-4">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="text-gray-700 hover:text-hdz-blue font-medium text-lg transition-colors"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`font-medium text-lg transition-colors relative pl-4 ${
+                    isActive
+                      ? 'text-hdz-blue font-bold'
+                      : 'text-gray-700 hover:text-hdz-blue'
+                  }`}
+                >
+                  {/* Active indicator - left border */}
+                  {isActive && (
+                    <span className="absolute left-0 top-0 bottom-0 w-1 bg-hdz-blue rounded-r" />
+                  )}
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Mobile Social Icons */}

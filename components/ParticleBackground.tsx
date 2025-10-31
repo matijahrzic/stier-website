@@ -49,13 +49,30 @@ export default function ParticleBackground() {
       ctx.closePath();
     };
 
-    // Mouse move handler
+    // Mouse/Touch move handler
     const handleMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
     };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const rect = canvas.getBoundingClientRect();
+        mouseX = e.touches[0].clientX - rect.left;
+        mouseY = e.touches[0].clientY - rect.top;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      // Reset mouse position when touch ends
+      mouseX = -1000;
+      mouseY = -1000;
+    };
+
     window.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('touchmove', handleTouchMove, { passive: true });
+    canvas.addEventListener('touchend', handleTouchEnd);
 
     // Animation loop
     const animate = () => {
@@ -72,25 +89,20 @@ export default function ParticleBackground() {
         : Math.min(canvas.width, canvas.height) * 0.42; // Mobile: 42% of smaller dimension
       const starSize = isDesktop ? 22 : 16; // Bigger stars on desktop
 
-      // Mouse interaction - like turning a wheel (desktop only)
-      if (isDesktop) {
-        const dx = mouseX - centerX;
-        const dy = mouseY - centerY;
-        const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+      // Mouse/Touch interaction - like turning a wheel
+      const dx = mouseX - centerX;
+      const dy = mouseY - centerY;
+      const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
 
-        if (distanceFromCenter < circleRadius + 250 && mouseX > -500) {
-          // Horizontal position controls rotation speed and direction
-          const normalizedX = (mouseX / canvas.width - 0.5) * 2; // -1 to 1
-          const influence = Math.max(0, 1 - distanceFromCenter / (circleRadius + 250));
-          const speedBoost = normalizedX * influence * 0.02;
-          currentRotationSpeed = baseRotationSpeed + speedBoost;
-        } else {
-          // Return to base speed
-          currentRotationSpeed += (baseRotationSpeed - currentRotationSpeed) * 0.08;
-        }
+      if (distanceFromCenter < circleRadius + 250 && mouseX > -500) {
+        // Horizontal position controls rotation speed and direction
+        const normalizedX = (mouseX / canvas.width - 0.5) * 2; // -1 to 1
+        const influence = Math.max(0, 1 - distanceFromCenter / (circleRadius + 250));
+        const speedBoost = normalizedX * influence * 0.02;
+        currentRotationSpeed = baseRotationSpeed + speedBoost;
       } else {
-        // Mobile: just auto-rotate at base speed
-        currentRotationSpeed = baseRotationSpeed;
+        // Return to base speed
+        currentRotationSpeed += (baseRotationSpeed - currentRotationSpeed) * 0.08;
       }
 
       // Apply rotation
@@ -117,6 +129,8 @@ export default function ParticleBackground() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', resizeCanvas);
       window.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('touchmove', handleTouchMove);
+      canvas.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
@@ -124,7 +138,7 @@ export default function ParticleBackground() {
     <canvas
       ref={canvasRef}
       className="absolute inset-0 z-5"
-      style={{ mixBlendMode: 'screen', pointerEvents: 'none' }}
+      style={{ mixBlendMode: 'screen' }}
     />
   );
 }

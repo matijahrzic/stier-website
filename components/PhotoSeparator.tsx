@@ -21,15 +21,29 @@ export default function PhotoSeparator({
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       viewport={{ once: true }}
-      className={`relative w-full ${height} overflow-hidden`}
+      className="py-8 bg-white"
     >
-      <img
-        src={imagePath}
-        alt={alt}
-        className="w-full h-full object-cover"
-        style={{ objectPosition, objectFit: 'cover' }}
-      />
-      <div className="absolute inset-0 bg-gradient-to-r from-hdz-blue/20 to-transparent" />
+      <div className="container mx-auto px-4">
+        <div className="relative overflow-hidden rounded-lg shadow-xl">
+          {/* Force 16:9 aspect ratio */}
+          <div style={{ paddingTop: '56.25%', position: 'relative' }}>
+            <img
+              src={imagePath}
+              alt={alt}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center center'
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-hdz-blue/20 to-transparent" />
+          </div>
+        </div>
+      </div>
     </motion.section>
   );
 }
