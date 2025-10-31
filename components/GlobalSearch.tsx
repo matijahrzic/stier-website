@@ -176,7 +176,7 @@ export default function GlobalSearch() {
               </div>
             ) : results.length === 0 ? (
               <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-                <p>Nema rezultata za "{searchQuery}"</p>
+                <p>Nema rezultata za &ldquo;{searchQuery}&rdquo;</p>
               </div>
             ) : (
               <div className="py-2">

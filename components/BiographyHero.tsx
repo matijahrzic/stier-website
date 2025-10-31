@@ -33,7 +33,7 @@ export default function BiographyHero() {
           >
             <h1 className="text-5xl font-bold mb-6">Davor Ivo Stier</h1>
             <p className="text-2xl mb-4 italic">
-              "Hrvatske vrijednosti, europska snaga"
+              &ldquo;Hrvatske vrijednosti, europska snaga&rdquo;
             </p>
             <p className="text-xl mb-8">
               Zastupnik u Europskom parlamentu

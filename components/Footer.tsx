@@ -153,7 +153,7 @@ export default function Footer() {
               >
                 <div className="text-hdz-blue font-bold text-center">EPP Group</div>
                 <div className="text-xs text-gray-600 text-center">
-                  European People's Party
+                  European People&apos;s Party
                 </div>
               </a>
             </div>

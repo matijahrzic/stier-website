@@ -37,7 +37,7 @@ export default function AboutSection() {
                 Stier je predan radu za bolju Hrvatsku unutar jake i ujedinjene Europe.
               </p>
               <p className="font-semibold text-hdz-blue text-lg mt-6 italic">
-                "Hrvatske vrijednosti, europska snaga"
+                &ldquo;Hrvatske vrijednosti, europska snaga&rdquo;
               </p>
             </div>
           </motion.div>
